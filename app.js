@@ -4,6 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// https://github.com/expressjs/express/tree/master/examples/auth
+var hash = require('pbkdf2-password');
+var path = require('path');
+var session = require('express-session');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
@@ -19,6 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// https://github.com/expressjs/express/tree/master/examples/auth
+app.use(session({
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  secret: 'shhhh, very secret'
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
